@@ -3,10 +3,19 @@
 import { X } from "lucide-react";
 import { FormEvent, useEffect, useState } from "react";
 import { useLead } from "@/components/lead-provider";
-import { CITIES, PHONE_DISPLAY, PHONE_TEL, PROJECT_TYPES } from "@/lib/site";
+import { useI18n } from "@/components/locale-provider";
+import {
+  CITIES,
+  PHONE_DISPLAY,
+  PHONE_TEL,
+  PROJECT_TYPE_IDS,
+  SPACES,
+  SYSTEMS,
+} from "@/lib/site";
 
 export function BookingModal() {
   const { bookingOpen, closeBooking, prefill } = useLead();
+  const { locale, t } = useI18n();
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
     "idle",
   );
@@ -38,7 +47,7 @@ export function BookingModal() {
       const response = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...data, source: "booking-modal" }),
+        body: JSON.stringify({ ...data, source: "booking-modal", locale }),
       });
       if (!response.ok) {
         throw new Error("Request failed");
@@ -61,11 +70,9 @@ export function BookingModal() {
       >
         <div className="mb-4 flex items-start justify-between gap-4">
           <div>
-            <h2 className="font-display text-3xl text-white">
-              Free On-Site Inspection
-            </h2>
+            <h2 className="font-display text-3xl text-white">{t.booking.title}</h2>
             <p className="mt-1 text-sm text-slate-300">
-              Lock in a precise quote. Or call{" "}
+              {t.booking.body}{" "}
               <a href={PHONE_TEL} className="text-cyan underline">
                 {PHONE_DISPLAY}
               </a>
@@ -76,36 +83,34 @@ export function BookingModal() {
             type="button"
             onClick={closeBooking}
             className="grid h-10 w-10 place-items-center rounded-full border border-white/10"
-            aria-label="Close booking form"
+            aria-label={t.booking.close}
           >
             <X className="h-5 w-5" />
           </button>
         </div>
 
         {status === "sent" ? (
-          <p className="rounded-2xl bg-cyan/10 p-4 text-cyan">
-            Request received. We will confirm your inspection window shortly.
-          </p>
+          <p className="rounded-2xl bg-cyan/10 p-4 text-cyan">{t.booking.sent}</p>
         ) : (
           <form onSubmit={onSubmit} className="grid gap-3">
             <input
               required
               name="name"
-              placeholder="Name"
+              placeholder={t.contact.name}
               className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 outline-none focus:border-cyan"
             />
             <input
               required
               name="phone"
               type="tel"
-              placeholder="Phone number"
+              placeholder={t.contact.phone}
               className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 outline-none focus:border-cyan"
             />
             <input
               required
               name="email"
               type="email"
-              placeholder="Email"
+              placeholder={t.contact.email}
               className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 outline-none focus:border-cyan"
             />
             <select
@@ -113,10 +118,37 @@ export function BookingModal() {
               defaultValue={prefill.city ?? ""}
               className="rounded-xl border border-white/10 bg-[#0B0F17] px-4 py-3 outline-none focus:border-cyan"
             >
-              <option value="">City / Area</option>
-              {CITIES.map((city) => (
-                <option key={city.name} value={city.name}>
-                  {city.name}
+              <option value="">{t.contact.city}</option>
+              {CITIES.map((city) => {
+                const name = locale === "fr" ? city.nameFr : city.nameEn;
+                return (
+                  <option key={city.id} value={name}>
+                    {name}
+                  </option>
+                );
+              })}
+            </select>
+            <select
+              name="spaceType"
+              defaultValue={prefill.spaceType ?? ""}
+              className="rounded-xl border border-white/10 bg-[#0B0F17] px-4 py-3 outline-none focus:border-cyan"
+            >
+              <option value="">{t.contact.spaceType}</option>
+              {SPACES.map((space) => (
+                <option key={space.id} value={t.calculator.spaces[space.id]}>
+                  {t.calculator.spaces[space.id]}
+                </option>
+              ))}
+            </select>
+            <select
+              name="system"
+              defaultValue={prefill.system ?? ""}
+              className="rounded-xl border border-white/10 bg-[#0B0F17] px-4 py-3 outline-none focus:border-cyan"
+            >
+              <option value="">{t.contact.system}</option>
+              {SYSTEMS.map((system) => (
+                <option key={system.id} value={t.calculator.systems[system.id]}>
+                  {t.calculator.systems[system.id]}
                 </option>
               ))}
             </select>
@@ -125,10 +157,10 @@ export function BookingModal() {
               defaultValue={prefill.projectType ?? ""}
               className="rounded-xl border border-white/10 bg-[#0B0F17] px-4 py-3 outline-none focus:border-cyan"
             >
-              <option value="">Project type</option>
-              {PROJECT_TYPES.map((type) => (
-                <option key={type} value={type}>
-                  {type}
+              <option value="">{t.contact.project}</option>
+              {PROJECT_TYPE_IDS.map((id) => (
+                <option key={id} value={t.projectTypes[id]}>
+                  {t.projectTypes[id]}
                 </option>
               ))}
             </select>
@@ -137,14 +169,14 @@ export function BookingModal() {
               type="number"
               min={50}
               defaultValue={prefill.sqft ?? ""}
-              placeholder="Estimated sq ft"
+              placeholder={t.contact.sqft}
               className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 outline-none focus:border-cyan"
             />
             <textarea
               name="notes"
               rows={3}
               defaultValue={prefill.notes ?? ""}
-              placeholder="Notes"
+              placeholder={t.contact.notes}
               className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 outline-none focus:border-cyan"
             />
             {prefill.estimateLow && prefill.estimateHigh ? (
@@ -155,16 +187,14 @@ export function BookingModal() {
               />
             ) : null}
             {status === "error" ? (
-              <p className="text-sm text-red-300">
-                Could not send. Call {PHONE_DISPLAY} or email us directly.
-              </p>
+              <p className="text-sm text-red-300">{t.contact.error}</p>
             ) : null}
             <button
               type="submit"
               disabled={status === "sending"}
               className="rounded-full bg-gold py-3 font-semibold text-[#0B0F17] disabled:opacity-60"
             >
-              {status === "sending" ? "Sending…" : "Request Inspection"}
+              {status === "sending" ? t.contact.sending : t.booking.submit}
             </button>
           </form>
         )}

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import { Cormorant_Garamond, Outfit } from "next/font/google";
-import { SiteShell } from "@/components/site-shell";
+import { SITE_URL } from "@/lib/site";
 import "./globals.css";
 
 const outfit = Outfit({
@@ -15,21 +16,24 @@ const cormorant = Cormorant_Garamond({
 });
 
 export const metadata: Metadata = {
-  title: "Prime Epoxy Flooring | Garage & Metallic Epoxy Specialists",
-  description:
-    "Quebec & Eastern Ontario's premier garage and metallic epoxy flooring specialists. XPS certified, 100% solids resins, polyaspartic topcoats, and a multi-year adhesion warranty. Call 438-815-8815.",
-  metadataBase: new URL("https://primeepoxyflooring.ca"),
+  metadataBase: new URL(SITE_URL),
+  icons: {
+    icon: "/logo.png",
+    apple: "/logo.png",
+    shortcut: "/logo.png",
+  },
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({ children }: LayoutProps<"/">) {
+  const localeHeader = (await headers()).get("x-locale");
+  const lang = localeHeader === "fr" ? "fr-CA" : "en-CA";
+
   return (
     <html
-      lang="en"
+      lang={lang}
       className={`${outfit.variable} ${cormorant.variable} h-full antialiased`}
     >
-      <body className="min-h-full bg-deep text-foreground">
-        <SiteShell>{children}</SiteShell>
-      </body>
+      <body className="min-h-full bg-deep text-foreground">{children}</body>
     </html>
   );
 }

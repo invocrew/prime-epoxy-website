@@ -12,6 +12,7 @@ import {
 export type BookingPrefill = {
   sqft?: number;
   system?: string;
+  spaceType?: string;
   city?: string;
   projectType?: string;
   estimateLow?: number;

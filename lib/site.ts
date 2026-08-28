@@ -1,12 +1,19 @@
+export const SITE_URL = "https://primeepoxyflooring.ca";
 export const COMPANY = "Prime Epoxy Flooring";
+export const LOGO_PATH = "/logo.png";
+export const LOGO_ALT = "Prime Epoxy Flooring Logo";
 
 export const PHONE_DISPLAY = "438-815-8815";
-export const PHONE_TEL = "tel:+14388158815";
+export const PHONE_TEL = "tel:438-815-8815";
 
 export const EMAILS = {
-  sales: "Sales@PrimeEpoxyFlooring.ca",
-  info: "info@primeEpoxyFlooring.ca",
+  sales: "sales@primeepoxyflooring.ca",
+  info: "info@primeepoxyflooring.ca",
 } as const;
+
+export const LOCALES = ["en", "fr"] as const;
+export type Locale = (typeof LOCALES)[number];
+export const DEFAULT_LOCALE: Locale = "en";
 
 export const SOCIAL = {
   tiktok: "https://tiktok.com/@primeepoxyflooring.ca",
@@ -16,81 +23,79 @@ export const SOCIAL = {
 } as const;
 
 export const CITIES = [
-  { name: "Montreal", region: "Quebec" },
-  { name: "Laval", region: "Quebec" },
-  { name: "West Island", region: "Quebec" },
-  { name: "South Shore", region: "Quebec" },
-  { name: "Gatineau QC", region: "Quebec" },
-  { name: "Ottawa ON", region: "Ontario" },
+  { id: "montreal", nameEn: "Montreal", nameFr: "Montréal", regionEn: "Quebec", regionFr: "Québec" },
+  { id: "laval", nameEn: "Laval", nameFr: "Laval", regionEn: "Quebec", regionFr: "Québec" },
+  { id: "west-island", nameEn: "West Island", nameFr: "West Island", regionEn: "Quebec", regionFr: "Québec" },
+  { id: "pointe-claire", nameEn: "Pointe-Claire", nameFr: "Pointe-Claire", regionEn: "West Island", regionFr: "West Island" },
+  { id: "brossard", nameEn: "Brossard", nameFr: "Brossard", regionEn: "South Shore", regionFr: "Rive-Sud" },
+  { id: "longueuil", nameEn: "Longueuil", nameFr: "Longueuil", regionEn: "South Shore", regionFr: "Rive-Sud" },
+  { id: "south-shore", nameEn: "South Shore", nameFr: "Rive-Sud", regionEn: "Quebec", regionFr: "Québec" },
+  { id: "gatineau", nameEn: "Gatineau QC", nameFr: "Gatineau QC", regionEn: "Quebec", regionFr: "Québec" },
+  { id: "ottawa", nameEn: "Ottawa ON", nameFr: "Ottawa ON", regionEn: "Ontario", regionFr: "Ontario" },
 ] as const;
 
-export const TRUST_BADGES = [
-  "Certified Professional Epoxy Installer (XPS Express Trained)",
-  "100% Commercial-Grade Industrial Resins & Polyaspartics",
-  "Multi-Year Adhesion & Delamination Warranty",
-  "Dustless Diamond Grinding Mechanical Preparation",
+export const SCHEMA_AREAS = [
+  "Montreal",
+  "Laval",
+  "West Island",
+  "Brossard",
+  "Longueuil",
+  "Pointe-Claire",
 ] as const;
 
-export const NAV_LINKS = [
-  { href: "#services", label: "Systems" },
-  { href: "#calculator", label: "Pricing" },
-  { href: "#process", label: "Process" },
-  { href: "#gallery", label: "Gallery" },
-  { href: "#areas", label: "Service Areas" },
-  { href: "#faq", label: "FAQ" },
-  { href: "#contact", label: "Contact" },
+export const GALLERY_IMAGES = {
+  flakeBefore:
+    "https://images.unsplash.com/photo-1590381105924-c72589b9ef3f?auto=format&fit=crop&w=1200&q=80",
+  flakeAfter:
+    "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1200&q=80",
+  metallicBefore:
+    "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1200&q=80",
+  metallicAfter:
+    "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
+} as const;
+
+export const SPACES = [
+  { id: "1-car", category: "residential", sqft: 250, basementPrep: false },
+  { id: "2-car", category: "residential", sqft: 450, basementPrep: false },
+  { id: "3-car", category: "residential", sqft: 650, basementPrep: false },
+  { id: "basement", category: "residential", sqft: 800, basementPrep: true },
+  { id: "living", category: "residential", sqft: 500, basementPrep: false },
+  { id: "wet-room", category: "residential", sqft: 150, basementPrep: false },
+  { id: "showroom", category: "commercial", sqft: 2000, basementPrep: false },
+  { id: "restaurant", category: "commercial", sqft: 1200, basementPrep: false },
+  { id: "retail", category: "commercial", sqft: 1500, basementPrep: false },
+  { id: "warehouse", category: "commercial", sqft: 3500, basementPrep: false },
+  { id: "custom", category: "custom", sqft: 800, basementPrep: false },
 ] as const;
 
-export const SIZE_PRESETS = [
-  { id: "1-car", label: "1-Car Garage", sqft: 250 },
-  { id: "2-car", label: "2-Car Garage", sqft: 450 },
-  { id: "3-car", label: "3-Car Garage", sqft: 650 },
-  { id: "basement", label: "Basement", sqft: 800 },
-  { id: "custom", label: "Custom Sq Ft", sqft: 400 },
-] as const;
-
-export type SizePresetId = (typeof SIZE_PRESETS)[number]["id"];
+export type SpaceId = (typeof SPACES)[number]["id"];
+export type SpaceCategory = (typeof SPACES)[number]["category"];
 
 export const SYSTEMS = [
-  {
-    id: "flake",
-    name: "Full Flake Broadcast",
-    avg: 8,
-    low: 7,
-    high: 9,
-    basementLow: 13,
-    basementHigh: 15,
-    basementAvg: 14,
-  },
-  {
-    id: "quartz",
-    name: "Commercial Quartz",
-    avg: 10,
-    low: 9,
-    high: 11,
-  },
-  {
-    id: "metallic",
-    name: "Metallic Marble",
-    avg: 19,
-    low: 17,
-    high: 21,
-  },
+  { id: "flake", avg: 8, low: 7, high: 9 },
+  { id: "quartz", avg: 10, low: 9, high: 11 },
+  { id: "metallic", avg: 19, low: 17, high: 21 },
 ] as const;
 
 export type SystemId = (typeof SYSTEMS)[number]["id"];
 
-export const COVE = {
-  low: 20,
-  high: 25,
-  avg: 22.5,
-} as const;
+export const COVE = { low: 20, high: 25, avg: 22.5 } as const;
 
-export const PROJECT_TYPES = [
-  "Full Flake Broadcast (Garage / Basement)",
-  "Commercial Quartz System",
-  "Luxury 3D Metallic & Marble",
-  "Custom Countertops & Tables",
-  "Cove Base & Stem Walls",
-  "Not sure — need a recommendation",
+export const PROJECT_TYPE_IDS = [
+  "flake",
+  "quartz",
+  "metallic",
+  "countertops",
+  "cove",
+  "unsure",
+] as const;
+
+export const NAV_LINKS = [
+  { href: "#services", key: "services" },
+  { href: "#calculator", key: "calculator" },
+  { href: "#process", key: "process" },
+  { href: "#gallery", key: "gallery" },
+  { href: "#areas", key: "areas" },
+  { href: "#faq", key: "faq" },
+  { href: "#contact", key: "contact" },
 ] as const;

@@ -1,4 +1,8 @@
+"use client";
+
 import { Award, Mail, MapPin, Phone, ShieldCheck } from "lucide-react";
+import { BrandLogo } from "@/components/brand-logo";
+import { useI18n } from "@/components/locale-provider";
 import {
   COMPANY,
   EMAILS,
@@ -6,7 +10,6 @@ import {
   PHONE_DISPLAY,
   PHONE_TEL,
   SOCIAL,
-  TRUST_BADGES,
 } from "@/lib/site";
 
 function TikTokIcon({ className }: { className?: string }) {
@@ -43,16 +46,16 @@ function InstagramIcon({ className }: { className?: string }) {
 }
 
 export function Footer() {
+  const { t } = useI18n();
+
   return (
     <footer className="border-t border-white/10 bg-[#070a10]">
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:px-6 lg:grid-cols-4">
         <div className="lg:col-span-2">
-          <p className="font-display text-2xl text-white">{COMPANY}</p>
-          <p className="mt-3 max-w-md text-sm text-slate-400">
-            Quebec & Eastern Ontario garage, basement, metallic, and commercial
-            quartz flooring — XPS Express trained installers using 100%
-            commercial-grade industrial resins and polyaspartics.
-          </p>
+          <a href="#top" className="inline-flex h-16 items-center">
+            <BrandLogo />
+          </a>
+          <p className="mt-3 max-w-md text-sm text-slate-400">{t.footer.blurb}</p>
           <div className="mt-5 flex gap-3">
             <a
               href={SOCIAL.tiktok}
@@ -86,12 +89,9 @@ export function Footer() {
 
         <div>
           <p className="text-sm font-semibold uppercase tracking-wider text-gold">
-            Contact
+            {t.footer.contact}
           </p>
-          <a
-            href={PHONE_TEL}
-            className="mt-3 flex items-center gap-2 text-cyan"
-          >
+          <a href={PHONE_TEL} className="mt-3 flex items-center gap-2 text-cyan">
             <Phone className="h-4 w-4" />
             {PHONE_DISPLAY}
           </a>
@@ -111,21 +111,21 @@ export function Footer() {
           </a>
           <p className="mt-3 flex items-start gap-2 text-sm text-slate-400">
             <MapPin className="mt-0.5 h-4 w-4 text-gold" />
-            Montreal, Laval, West Island, South Shore, Gatineau QC, Ottawa ON
+            Montréal, Laval, West Island, Brossard, Longueuil, Pointe-Claire
           </p>
           <p className="mt-3 rounded-full border border-white/10 px-3 py-1 text-xs text-slate-400">
-            Google Maps Profile — Coming Soon
+            {t.footer.maps}
           </p>
         </div>
 
         <div>
           <p className="text-sm font-semibold uppercase tracking-wider text-gold">
-            Explore
+            {t.footer.explore}
           </p>
           <nav className="mt-3 flex flex-col gap-2 text-sm text-slate-300">
             {NAV_LINKS.map((link) => (
               <a key={link.href} href={link.href} className="hover:text-white">
-                {link.label}
+                {t.nav[link.key]}
               </a>
             ))}
           </nav>
@@ -134,12 +134,12 @@ export function Footer() {
 
       <div className="border-t border-white/10">
         <div className="mx-auto flex max-w-7xl flex-wrap gap-3 px-4 py-6 sm:px-6">
-          {TRUST_BADGES.map((badge) => (
+          {t.trust.map((badge, index) => (
             <span
               key={badge}
               className="inline-flex items-center gap-2 rounded-full border border-gold/30 bg-gold/10 px-3 py-1.5 text-xs text-gold"
             >
-              {badge.startsWith("Certified") ? (
+              {index === 0 ? (
                 <Award className="h-3.5 w-3.5" />
               ) : (
                 <ShieldCheck className="h-3.5 w-3.5" />
@@ -149,8 +149,7 @@ export function Footer() {
           ))}
         </div>
         <p className="px-4 pb-8 text-center text-xs text-slate-500">
-          © {new Date().getFullYear()} {COMPANY}. All rights reserved. Estimates
-          are guides only until a free on-site inspection is completed.
+          © {new Date().getFullYear()} {COMPANY}. {t.footer.legal}
         </p>
       </div>
     </footer>
