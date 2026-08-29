@@ -43,17 +43,6 @@ export const SCHEMA_AREAS = [
   "Pointe-Claire",
 ] as const;
 
-export const GALLERY_IMAGES = {
-  flakeBefore:
-    "https://images.unsplash.com/photo-1590381105924-c72589b9ef3f?auto=format&fit=crop&w=1200&q=80",
-  flakeAfter:
-    "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1200&q=80",
-  metallicBefore:
-    "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1200&q=80",
-  metallicAfter:
-    "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
-} as const;
-
 export const SPACES = [
   { id: "1-car", category: "residential", sqft: 250, basementPrep: false },
   { id: "2-car", category: "residential", sqft: 450, basementPrep: false },

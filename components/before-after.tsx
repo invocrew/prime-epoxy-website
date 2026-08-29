@@ -3,7 +3,15 @@
 import Image from "next/image";
 import { usePointerDrag } from "@/components/use-pointer-drag";
 import { useI18n } from "@/components/locale-provider";
-import { GALLERY_IMAGES } from "@/lib/site";
+
+const FLAKE_BEFORE =
+  "https://images.unsplash.com/photo-1590381105924-c72589b9ef3f?auto=format&fit=crop&w=1200&q=80";
+const FLAKE_AFTER =
+  "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1200&q=80";
+const METALLIC_BEFORE =
+  "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1200&q=80";
+const METALLIC_AFTER =
+  "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80";
 
 export function BeforeAfter() {
   const { t } = useI18n();
@@ -18,8 +26,8 @@ export function BeforeAfter() {
       <div className="mt-8 grid gap-6 lg:grid-cols-2">
         <Comparison
           title={t.gallery.flakeTitle}
-          beforeSrc={GALLERY_IMAGES.flakeBefore}
-          afterSrc={GALLERY_IMAGES.flakeAfter}
+          beforeSrc={FLAKE_BEFORE}
+          afterSrc={FLAKE_AFTER}
           beforeAlt={t.gallery.flakeBeforeAlt}
           afterAlt={t.gallery.flakeAlt}
           beforeLabel={t.gallery.before}
@@ -28,8 +36,8 @@ export function BeforeAfter() {
         />
         <Comparison
           title={t.gallery.metallicTitle}
-          beforeSrc={GALLERY_IMAGES.metallicBefore}
-          afterSrc={GALLERY_IMAGES.metallicAfter}
+          beforeSrc={METALLIC_BEFORE}
+          afterSrc={METALLIC_AFTER}
           beforeAlt={t.gallery.metallicBeforeAlt}
           afterAlt={t.gallery.metallicAlt}
           beforeLabel={t.gallery.before}

@@ -2,6 +2,7 @@
 
 import { Mail, Phone } from "lucide-react";
 import { FormEvent, useState } from "react";
+import { FormSuccess } from "@/components/form-success";
 import { useLead } from "@/components/lead-provider";
 import { useI18n } from "@/components/locale-provider";
 import {
@@ -167,9 +168,7 @@ export function ContactForm() {
           {status === "error" ? (
             <p className="text-sm text-red-300">{t.contact.error}</p>
           ) : null}
-          {status === "sent" ? (
-            <p className="text-sm text-cyan">{t.contact.sent}</p>
-          ) : null}
+          {status === "sent" ? <FormSuccess message={t.contact.sent} /> : null}
           <button
             type="submit"
             disabled={status === "sending"}

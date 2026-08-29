@@ -1,5 +1,6 @@
 "use client";
 
+import { FormSuccess } from "@/components/form-success";
 import { X } from "lucide-react";
 import { FormEvent, useEffect, useState } from "react";
 import { useLead } from "@/components/lead-provider";
@@ -90,7 +91,7 @@ export function BookingModal() {
         </div>
 
         {status === "sent" ? (
-          <p className="rounded-2xl bg-cyan/10 p-4 text-cyan">{t.booking.sent}</p>
+          <FormSuccess message={t.booking.sent} />
         ) : (
           <form onSubmit={onSubmit} className="grid gap-3">
             <input

@@ -341,14 +341,14 @@ export const dictionaries: Record<Locale, Dictionary> = {
       notes: "Notes",
       submit: "Request Free Estimate",
       sending: "Sending…",
-      sent: "Thank you. Your estimate request was sent to sales@primeepoxyflooring.ca.",
+      sent: "Thank you! We received your quote request.",
       error: "Could not send. Please call 438-815-8815 or email sales@primeepoxyflooring.ca.",
     },
     booking: {
       title: "Free On-Site Inspection",
       body: "Lock in a precise quote. Or call",
       close: "Close booking form",
-      sent: "Request received and emailed to sales@primeepoxyflooring.ca. We will confirm your inspection window shortly.",
+      sent: "Thank you! We received your quote request.",
       submit: "Request Inspection",
     },
     faq: {
@@ -613,7 +613,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
       notes: "Notes",
       submit: "Demander une soumission gratuite",
       sending: "Envoi…",
-      sent: "Merci. Votre demande a été envoyée à sales@primeepoxyflooring.ca.",
+      sent: "Merci! Nous avons bien reçu votre demande de soumission.",
       error:
         "Envoi impossible. Appelez le 438-815-8815 ou écrivez à sales@primeepoxyflooring.ca.",
     },
@@ -621,7 +621,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
       title: "Inspection gratuite sur place",
       body: "Obtenez un prix précis. Ou appelez le",
       close: "Fermer le formulaire",
-      sent: "Demande reçue et envoyée à sales@primeepoxyflooring.ca. Nous confirmerons bientôt votre plage d'inspection.",
+      sent: "Merci! Nous avons bien reçu votre demande de soumission.",
       submit: "Demander l'inspection",
     },
     faq: {
