@@ -1,6 +1,5 @@
 import { EMAILS } from "@/lib/site";
 import { NextRequest } from "next/server";
-import { Resend } from "resend";
 
 type Payload = {
   name?: string;
@@ -17,6 +16,8 @@ type Payload = {
   locale?: string;
 };
 
+const FORMSUBMIT_URL = `https://formsubmit.co/ajax/${EMAILS.sales}`;
+
 function isEmail(value: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 }
@@ -26,7 +27,10 @@ export async function POST(request: NextRequest) {
   try {
     body = (await request.json()) as Payload;
   } catch {
-    return Response.json({ ok: false, success: false, error: "Invalid JSON" }, { status: 400 });
+    return Response.json(
+      { ok: false, success: false, error: "Invalid JSON" },
+      { status: 400 },
+    );
   }
 
   const name = body.name?.trim() ?? "";
@@ -34,69 +38,50 @@ export async function POST(request: NextRequest) {
   const email = body.email?.trim() ?? "";
 
   if (!name || !phone || !isEmail(email)) {
-    return Response.json({ ok: false, success: false, error: "Invalid lead" }, { status: 400 });
+    return Response.json(
+      { ok: false, success: false, error: "Invalid lead" },
+      { status: 400 },
+    );
   }
 
-  const to = process.env.LEAD_TO ?? EMAILS.sales;
-  const lead = {
+  const payload = {
     name,
-    phone,
     email,
+    phone,
     city: body.city?.trim() ?? "",
-    spaceType: body.spaceType?.trim() ?? "",
-    sqft: body.sqft?.toString().trim() ?? "",
+    space: body.spaceType?.trim() ?? "",
     system: body.system?.trim() || body.projectType?.trim() || "",
-    projectType: body.projectType?.trim() ?? "",
-    notes: body.notes?.trim() ?? "",
-    source: body.source?.trim() ?? "website",
-    estimate: body.estimate?.trim() ?? "",
-    locale: body.locale?.trim() ?? "en",
+    area: body.sqft?.toString().trim() ?? "",
+    message: [
+      body.notes?.trim() ?? "",
+      body.projectType?.trim() ? `Project: ${body.projectType.trim()}` : "",
+      body.estimate?.trim() ? `Estimate: ${body.estimate.trim()}` : "",
+      body.source?.trim() ? `Source: ${body.source.trim()}` : "",
+    ]
+      .filter(Boolean)
+      .join("\n"),
+    _subject: "New Quote Request - Prime Epoxy Flooring",
+    _captcha: "false",
+    _template: "table",
   };
 
-  const apiKey = process.env.RESEND_API_KEY;
-  if (!apiKey) {
-    console.info("[Prime Epoxy Flooring lead — email not configured, logged locally]", lead);
-    return Response.json({ ok: true, success: true, delivered: false });
+  try {
+    const response = await fetch(FORMSUBMIT_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      const detail = await response.text();
+      console.error("[lead] FormSubmit rejected", response.status, detail, payload);
+    }
+  } catch (error) {
+    console.error("[lead] FormSubmit network error", error, payload);
   }
 
-  const html = `
-    <h2>New Prime Epoxy Flooring lead</h2>
-    <p><strong>Name:</strong> ${escapeHtml(lead.name)}</p>
-    <p><strong>Phone:</strong> ${escapeHtml(lead.phone)}</p>
-    <p><strong>Email:</strong> ${escapeHtml(lead.email)}</p>
-    <p><strong>City:</strong> ${escapeHtml(lead.city)}</p>
-    <p><strong>Space Type:</strong> ${escapeHtml(lead.spaceType)}</p>
-    <p><strong>Sq Ft:</strong> ${escapeHtml(lead.sqft)}</p>
-    <p><strong>System:</strong> ${escapeHtml(lead.system)}</p>
-    <p><strong>Project Type:</strong> ${escapeHtml(lead.projectType)}</p>
-    <p><strong>Estimate:</strong> ${escapeHtml(lead.estimate)}</p>
-    <p><strong>Source:</strong> ${escapeHtml(lead.source)}</p>
-    <p><strong>Locale:</strong> ${escapeHtml(lead.locale)}</p>
-    <p><strong>Notes:</strong><br/>${escapeHtml(lead.notes).replaceAll("\n", "<br/>")}</p>
-  `;
-
-  const resend = new Resend(apiKey);
-  const { error } = await resend.emails.send({
-    from:
-      process.env.RESEND_FROM ?? "Prime Epoxy Flooring <onboarding@resend.dev>",
-    to: [to],
-    replyTo: email,
-    subject: `New estimate request — ${name} — ${lead.spaceType || lead.system || "website"}`,
-    html,
-  });
-
-  if (error) {
-    console.error("[lead] Resend error — lead logged locally", error, lead);
-    return Response.json({ ok: true, success: true, delivered: false });
-  }
-
-  return Response.json({ ok: true, success: true, delivered: true });
-}
-
-function escapeHtml(value: string) {
-  return value
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;");
+  return Response.json({ ok: true, success: true });
 }
