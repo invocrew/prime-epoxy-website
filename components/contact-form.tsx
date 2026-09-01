@@ -15,6 +15,7 @@ import {
   SPACES,
   SYSTEMS,
 } from "@/lib/site";
+import { submitLead } from "@/lib/submit-lead";
 
 export function ContactForm() {
   const { prefill } = useLead();
@@ -29,14 +30,7 @@ export function ContactForm() {
     const data = Object.fromEntries(new FormData(form).entries());
     setStatus("sending");
     try {
-      const response = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...data, source: "contact-form", locale }),
-      });
-      if (!response.ok) {
-        throw new Error("Request failed");
-      }
+      await submitLead(data);
       setStatus("sent");
       form.reset();
     } catch {

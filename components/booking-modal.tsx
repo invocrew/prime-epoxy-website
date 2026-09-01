@@ -13,6 +13,7 @@ import {
   SPACES,
   SYSTEMS,
 } from "@/lib/site";
+import { submitLead } from "@/lib/submit-lead";
 
 export function BookingModal() {
   const { bookingOpen, closeBooking, prefill } = useLead();
@@ -45,14 +46,7 @@ export function BookingModal() {
     const data = Object.fromEntries(new FormData(form).entries());
     setStatus("sending");
     try {
-      const response = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...data, source: "booking-modal", locale }),
-      });
-      if (!response.ok) {
-        throw new Error("Request failed");
-      }
+      await submitLead(data);
       setStatus("sent");
       form.reset();
     } catch {
