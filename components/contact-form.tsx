@@ -3,6 +3,7 @@
 import { Mail, Phone } from "lucide-react";
 import { FormEvent, useState } from "react";
 import { FormSuccess } from "@/components/form-success";
+import { GoogleMapsLink } from "@/components/google-maps-link";
 import { useLead } from "@/components/lead-provider";
 import { useI18n } from "@/components/locale-provider";
 import {
@@ -71,6 +72,7 @@ export function ContactForm() {
               <Mail className="h-4 w-4 text-gold" />
               {EMAILS.info}
             </a>
+            <GoogleMapsLink label={t.areas.maps} />
           </div>
         </div>
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { Award, Mail, MapPin, Phone, ShieldCheck } from "lucide-react";
+import { GoogleMapsLink } from "@/components/google-maps-link";
 import { BrandLogo } from "@/components/brand-logo";
 import { useI18n } from "@/components/locale-provider";
 import {
@@ -113,9 +114,7 @@ export function Footer() {
             <MapPin className="mt-0.5 h-4 w-4 text-gold" />
             Montréal, Laval, West Island, Brossard, Longueuil, Pointe-Claire
           </p>
-          <p className="mt-3 rounded-full border border-white/10 px-3 py-1 text-xs text-slate-400">
-            {t.footer.maps}
-          </p>
+          <GoogleMapsLink label={t.footer.maps} />
         </div>
 
         <div>

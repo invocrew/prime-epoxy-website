@@ -15,6 +15,8 @@ export const LOCALES = ["en", "fr"] as const;
 export type Locale = (typeof LOCALES)[number];
 export const DEFAULT_LOCALE: Locale = "en";
 
+export const GOOGLE_MAPS_URL = "https://maps.app.goo.gl/vL9dyWecYemkb5zGA";
+
 export const SOCIAL = {
   tiktok: "https://tiktok.com/@primeepoxyflooring.ca",
   facebook: "https://www.facebook.com/share/14tEoi1eDbs/",

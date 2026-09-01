@@ -1,5 +1,6 @@
 "use client";
 
+import { GoogleMapsLink } from "@/components/google-maps-link";
 import { MapPin } from "lucide-react";
 import { useLead } from "@/components/lead-provider";
 import { useI18n } from "@/components/locale-provider";
@@ -44,9 +45,7 @@ export function ServiceAreas() {
           );
         })}
       </div>
-      <p className="mt-5 inline-flex rounded-full border border-white/15 bg-white/5 px-4 py-2 text-sm text-slate-300">
-        {t.areas.maps}
-      </p>
+      <GoogleMapsLink label={t.areas.maps} />
     </section>
   );
 }

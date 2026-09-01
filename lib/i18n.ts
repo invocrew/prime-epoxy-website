@@ -323,7 +323,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
       h2: "Greater Montreal, Laval, West Island & South Shore",
       intro:
         "Select your city to pre-fill your inspection request. We also serve Gatineau QC and Ottawa ON.",
-      maps: "Google Maps Profile — Coming Soon",
+      maps: "Find Us on Google Maps",
     },
     contact: {
       kicker: "Lead capture",
@@ -382,7 +382,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
         "Residential, commercial, and luxury interior epoxy flooring across Greater Montreal, Laval, West Island, and the South Shore — XPS Express trained installers using 100% commercial-grade resins and polyaspartics.",
       contact: "Contact",
       explore: "Explore",
-      maps: "Google Maps Profile — Coming Soon",
+      maps: "Find Us on Google Maps",
       legal:
         "Estimates are guides only until a free on-site inspection is completed.",
     },
@@ -595,7 +595,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
       h2: "Grand Montréal, Laval, West Island et Rive-Sud",
       intro:
         "Choisissez votre ville pour préremplir la demande d'inspection. Nous desservons aussi Gatineau QC et Ottawa ON.",
-      maps: "Profil Google Maps — bientôt disponible",
+      maps: "Trouvez-nous sur Google Maps",
     },
     contact: {
       kicker: "Demande de soumission",
@@ -655,7 +655,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
         "Planchers d'époxy résidentiels, commerciaux et intérieurs de luxe dans le Grand Montréal, Laval, le West Island et la Rive-Sud — installateurs formés XPS Express, résines et polyaspartiques 100 % de calibre commercial.",
       contact: "Contact",
       explore: "Explorer",
-      maps: "Profil Google Maps — bientôt disponible",
+      maps: "Trouvez-nous sur Google Maps",
       legal:
         "Les estimations sont indicatives jusqu'à l'inspection gratuite sur place.",
     },

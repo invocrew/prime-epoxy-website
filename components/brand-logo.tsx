@@ -1,16 +1,9 @@
 "use client";
 
-import Image from "next/image";
 import { useState } from "react";
 import { COMPANY, LOGO_ALT, LOGO_PATH } from "@/lib/site";
 
-export function BrandLogo({
-  priority = false,
-  className = "h-16 w-auto object-contain",
-}: {
-  priority?: boolean;
-  className?: string;
-}) {
+export function BrandLogo() {
   const [failed, setFailed] = useState(false);
 
   if (failed) {
@@ -22,14 +15,15 @@ export function BrandLogo({
   }
 
   return (
-    <span className="isolate inline-flex h-16 items-center justify-center bg-[#0B0F17]">
-      <Image
+    <span className="inline-flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-full bg-slate-950/90 ring-1 ring-cyan/20">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
         src={LOGO_PATH}
         alt={LOGO_ALT}
-        width={256}
-        height={256}
-        priority={priority}
-        className={`${className} [mix-blend-mode:multiply]`}
+        width={64}
+        height={64}
+        decoding="async"
+        className="h-[4.75rem] w-[4.75rem] object-cover object-center [mix-blend-mode:multiply]"
         onError={() => setFailed(true)}
       />
     </span>

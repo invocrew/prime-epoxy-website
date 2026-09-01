@@ -17,7 +17,7 @@ export function Header() {
     <header className="sticky top-0 z-50 border-b border-white/10 bg-[#0B0F17]/80 backdrop-blur-xl">
       <div className="mx-auto flex h-[88px] max-w-7xl items-center justify-between gap-4 px-4 sm:px-6">
         <a href="#top" className="flex h-16 shrink-0 items-center">
-          <BrandLogo priority />
+          <BrandLogo />
         </a>
 
         <nav className="hidden items-center gap-5 lg:flex">

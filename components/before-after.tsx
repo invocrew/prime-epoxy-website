@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { usePointerDrag } from "@/components/use-pointer-drag";
 import { useI18n } from "@/components/locale-provider";
 
@@ -77,23 +76,21 @@ function Comparison({
         className="relative h-[320px] cursor-ew-resize select-none touch-none sm:h-[400px]"
         {...bind}
       >
-        <Image
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
           src={beforeSrc}
           alt={beforeAlt}
-          fill
-          sizes="(max-width: 1024px) 100vw, 50vw"
-          className="object-cover"
+          className="absolute inset-0 h-full w-full object-cover"
         />
         <div
           className="absolute inset-0 overflow-hidden"
           style={{ clipPath: `inset(0 ${100 - value}% 0 0)` }}
         >
-          <Image
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
             src={afterSrc}
             alt={afterAlt}
-            fill
-            sizes="(max-width: 1024px) 100vw, 50vw"
-            className="object-cover"
+            className="absolute inset-0 h-full w-full object-cover"
           />
         </div>
         <div
