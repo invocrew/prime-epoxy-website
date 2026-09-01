@@ -1,7 +1,7 @@
 import type { Locale } from "@/lib/site";
 
 export type Dictionary = {
-  meta: { title: string; description: string };
+  meta: { title: string; description: string; keywords: string };
   nav: Record<string, string>;
   header: {
     tagline: string;
@@ -125,10 +125,11 @@ export type Dictionary = {
 export const dictionaries: Record<Locale, Dictionary> = {
   en: {
     meta: {
-      title:
-        "Epoxy Flooring Montreal | Plancher Époxy Montréal | Garage & Metallic Epoxy Specialists",
+      title: "Prime Epoxy Flooring | Top Garage & Metallic Epoxy Montreal & Laval",
       description:
-        "Prime Epoxy Flooring installs residential, commercial, and luxury interior epoxy in Montreal, Laval, West Island, and the South Shore. Garage flake, metallic epoxy, restaurants, showrooms, and industrial floors. Call 438-815-8815.",
+        "Professional epoxy flooring, garage flake systems & luxury metallic epoxy coatings in Montreal, Laval & West Island. Commercial grade resins & polyaspartics. Free quote.",
+      keywords:
+        "epoxy flooring montreal, epoxy garage floor laval, metallic epoxy west island, plancher epoxy montreal, revetement epoxy garage",
     },
     nav: {
       services: "Systems",
@@ -398,9 +399,11 @@ export const dictionaries: Record<Locale, Dictionary> = {
   fr: {
     meta: {
       title:
-        "Plancher Époxy Montréal | Epoxy Flooring Montreal | Spécialistes garage et époxy métallique",
+        "Prime Epoxy Flooring | Plancher Époxy Garage & Métallique Montréal & Laval",
       description:
-        "Prime Epoxy Flooring installe des planchers d'époxy résidentiels, commerciaux et intérieurs de luxe à Montréal, Laval, West Island et Rive-Sud. Flocons de garage, époxy métallique, restaurants et industriels. Appelez le 438-815-8815.",
+        "Revêtement de plancher en époxy professionnel, systèmes flocons pour garage et époxy métallique de luxe à Montréal, Laval et West Island. Résines commerciales et polyaspartiques. Soumission gratuite.",
+      keywords:
+        "epoxy flooring montreal, epoxy garage floor laval, metallic epoxy west island, plancher epoxy montreal, revetement epoxy garage",
     },
     nav: {
       services: "Systèmes",

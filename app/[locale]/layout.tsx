@@ -24,9 +24,12 @@ export async function generateMetadata({
   return {
     title: t.meta.title,
     description: t.meta.description,
+    keywords: t.meta.keywords.split(",").map((keyword) => keyword.trim()),
     alternates: {
       canonical,
       languages: {
+        en: SITE_URL,
+        fr: `${SITE_URL}/fr`,
         "en-CA": SITE_URL,
         "fr-CA": `${SITE_URL}/fr`,
         "x-default": SITE_URL,
@@ -50,7 +53,7 @@ export async function generateMetadata({
       ],
     },
     twitter: {
-      card: "summary",
+      card: "summary_large_image",
       title: t.meta.title,
       description: t.meta.description,
       images: [`${SITE_URL}/logo.png`],

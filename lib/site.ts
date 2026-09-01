@@ -5,6 +5,7 @@ export const LOGO_ALT = "Prime Epoxy Flooring Logo";
 
 export const PHONE_DISPLAY = "438-815-8815";
 export const PHONE_TEL = "tel:438-815-8815";
+export const PHONE_E164 = "+1-438-815-8815";
 
 export const EMAILS = {
   sales: "sales@primeepoxyflooring.ca",
@@ -39,10 +40,27 @@ export const CITIES = [
 export const SCHEMA_AREAS = [
   "Montreal",
   "Laval",
-  "West Island",
+  "Pointe-Claire",
+  "Dollard-des-Ormeaux",
+  "Kirkland",
   "Brossard",
   "Longueuil",
-  "Pointe-Claire",
+  "West Island",
+] as const;
+
+export const SCHEMA_OFFERS = [
+  "Full Flake Epoxy Garage Floors",
+  "Metallic Marble Epoxy",
+  "Polyaspartic Topcoats",
+  "Commercial Epoxy Flooring",
+] as const;
+
+export const SEO_KEYWORDS = [
+  "epoxy flooring montreal",
+  "epoxy garage floor laval",
+  "metallic epoxy west island",
+  "plancher epoxy montreal",
+  "revetement epoxy garage",
 ] as const;
 
 export const SPACES = [
