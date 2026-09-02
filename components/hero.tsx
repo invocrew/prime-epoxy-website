@@ -79,6 +79,17 @@ export function Hero() {
             >
               {t.hero.featuredCta}
             </button>
+            <div className="relative mt-5 h-48 w-full overflow-hidden rounded-2xl border border-white/10 shadow-2xl sm:h-56">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/images/flooring/after-metallic.jpg"
+                alt="Luxury metallic marble epoxy flooring with high-gloss glass reflection"
+                className="h-full w-full object-cover"
+              />
+              <span className="absolute right-3 bottom-3 rounded-full border border-white/20 bg-[#0B0F17]/80 px-3 py-1 text-[11px] font-semibold tracking-wide text-white backdrop-blur-sm">
+                Luxury Marble Finish • High Gloss
+              </span>
+            </div>
             <span className="sr-only">{PHONE_DISPLAY}</span>
           </div>
         </div>
