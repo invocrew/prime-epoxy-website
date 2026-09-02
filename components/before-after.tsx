@@ -3,10 +3,10 @@
 import { usePointerDrag } from "@/components/use-pointer-drag";
 import { useI18n } from "@/components/locale-provider";
 
-const FLAKE_BEFORE = "/images/flooring/before-garage.jpg";
-const FLAKE_AFTER = "/images/flooring/after-garage.jpg";
-const METALLIC_BEFORE = "/images/flooring/before-metallic.jpg";
-const METALLIC_AFTER = "/images/flooring/after-metallic.jpg";
+const FLAKE_BEFORE = "/images/flooring/after-garage.jpg";
+const FLAKE_AFTER = "/images/flooring/before-garage.jpg";
+const METALLIC_BEFORE = "/images/flooring/after-metallic.jpg";
+const METALLIC_AFTER = "/images/flooring/before-metallic.jpg";
 
 export function BeforeAfter() {
   const { t } = useI18n();
