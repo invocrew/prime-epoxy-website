@@ -38,14 +38,18 @@ export const CITIES = [
 ] as const;
 
 export const SCHEMA_AREAS = [
-  "Montreal",
+  "Greater Montreal",
   "Laval",
-  "Pointe-Claire",
-  "Dollard-des-Ormeaux",
-  "Kirkland",
-  "Brossard",
-  "Longueuil",
   "West Island",
+  "South Shore",
+  "Vaudreuil-Dorion",
+] as const;
+
+export const SCHEMA_SERVICE_TYPES = [
+  "Garage Flake Epoxy",
+  "Metallic Marble Epoxy Flooring",
+  "Commercial Resin Coatings",
+  "Concrete Diamond Grinding",
 ] as const;
 
 export const SCHEMA_OFFERS = [

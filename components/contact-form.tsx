@@ -48,7 +48,11 @@ export function ContactForm() {
           <h2 className="font-display mt-2 text-4xl text-white">{t.contact.h2}</h2>
           <p className="mt-3 text-slate-300">{t.contact.intro}</p>
           <div className="mt-6 space-y-3 text-sm">
-            <a href={PHONE_TEL} className="flex items-center gap-2 text-cyan hover:underline">
+            <a
+              href={PHONE_TEL}
+              data-track="phone-call"
+              className="flex items-center gap-2 text-cyan hover:underline"
+            >
               <Phone className="h-4 w-4" />
               {PHONE_DISPLAY}
             </a>
@@ -167,6 +171,8 @@ export function ContactForm() {
           {status === "sent" ? <FormSuccess message={t.contact.sent} /> : null}
           <button
             type="submit"
+            id="btn-quote-submit"
+            data-track="quote-submit"
             disabled={status === "sending"}
             className="rounded-full bg-gold py-3.5 font-semibold text-[#0B0F17] glow-gold disabled:opacity-60"
           >

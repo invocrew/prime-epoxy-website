@@ -226,6 +226,7 @@ export function CostCalculator() {
             </button>
             <a
               href={PHONE_TEL}
+              data-track="phone-call"
               className="inline-flex items-center justify-center gap-2 rounded-full border border-cyan/40 px-5 py-3 font-semibold text-cyan"
             >
               <Phone className="h-4 w-4" />

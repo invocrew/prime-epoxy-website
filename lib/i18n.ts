@@ -118,6 +118,8 @@ export type Dictionary = {
     explore: string;
     maps: string;
     legal: string;
+    privacy: string;
+    terms: string;
   };
   projectTypes: Record<string, string>;
 };
@@ -386,6 +388,8 @@ export const dictionaries: Record<Locale, Dictionary> = {
       maps: "Find Us on Google Maps",
       legal:
         "Estimates are guides only until a free on-site inspection is completed.",
+      privacy: "Privacy Policy",
+      terms: "Terms of Service",
     },
     projectTypes: {
       flake: "Full Flake Broadcast (Garage / Basement)",
@@ -661,6 +665,8 @@ export const dictionaries: Record<Locale, Dictionary> = {
       maps: "Trouvez-nous sur Google Maps",
       legal:
         "Les estimations sont indicatives jusqu'à l'inspection gratuite sur place.",
+      privacy: "Politique de confidentialité",
+      terms: "Conditions d'utilisation",
     },
     projectTypes: {
       flake: "Flocons complets (garage / sous-sol)",

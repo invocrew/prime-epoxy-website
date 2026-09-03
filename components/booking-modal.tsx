@@ -68,7 +68,7 @@ export function BookingModal() {
             <h2 className="font-display text-3xl text-white">{t.booking.title}</h2>
             <p className="mt-1 text-sm text-slate-300">
               {t.booking.body}{" "}
-              <a href={PHONE_TEL} className="text-cyan underline">
+              <a href={PHONE_TEL} data-track="phone-call" className="text-cyan underline">
                 {PHONE_DISPLAY}
               </a>
               .
@@ -186,6 +186,8 @@ export function BookingModal() {
             ) : null}
             <button
               type="submit"
+              id="btn-quote-submit"
+              data-track="quote-submit"
               disabled={status === "sending"}
               className="rounded-full bg-gold py-3 font-semibold text-[#0B0F17] disabled:opacity-60"
             >

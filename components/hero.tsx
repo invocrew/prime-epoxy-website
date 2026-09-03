@@ -38,6 +38,8 @@ export function Hero() {
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <a
               href={PHONE_TEL}
+              id="btn-call-hero"
+              data-track="phone-call"
               className="inline-flex items-center justify-center gap-2 rounded-full bg-cyan px-6 py-3.5 text-base font-semibold text-[#0B0F17] glow-cyan transition hover:brightness-110"
             >
               <Phone className="h-5 w-5" />

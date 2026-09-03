@@ -16,7 +16,7 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-[#0B0F17]/80 backdrop-blur-xl">
       <div className="mx-auto flex h-[88px] max-w-7xl items-center justify-between gap-4 px-4 sm:px-6">
-        <a href="#top" className="flex h-16 shrink-0 items-center">
+        <a href="/" className="flex h-16 shrink-0 items-center">
           <BrandLogo />
         </a>
 
@@ -36,6 +36,8 @@ export function Header() {
           <LanguageToggle />
           <a
             href={PHONE_TEL}
+            id="btn-call-header"
+            data-track="phone-call"
             className="inline-flex items-center gap-2 rounded-full border border-cyan/40 bg-cyan/10 px-4 py-2 text-sm font-semibold text-cyan glow-cyan transition hover:bg-cyan/20"
           >
             <Phone className="h-4 w-4" />
@@ -76,6 +78,7 @@ export function Header() {
             <LanguageToggle />
             <a
               href={PHONE_TEL}
+              data-track="phone-call"
               className="inline-flex items-center justify-center gap-2 rounded-full bg-cyan px-4 py-3 font-semibold text-[#0B0F17]"
             >
               <Phone className="h-4 w-4" />

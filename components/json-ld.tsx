@@ -5,15 +5,14 @@ import {
   PHONE_E164,
   SCHEMA_AREAS,
   SCHEMA_OFFERS,
+  SCHEMA_SERVICE_TYPES,
   SITE_URL,
   SOCIAL,
   type Locale,
 } from "@/lib/site";
 import { getDictionary } from "@/lib/i18n";
 
-export function JsonLd({ locale }: { locale: Locale }) {
-  const t = getDictionary(locale);
-
+export function BusinessJsonLd() {
   const business = {
     "@context": "https://schema.org",
     "@type": ["HomeAndConstructionBusiness", "LocalBusiness"],
@@ -27,18 +26,15 @@ export function JsonLd({ locale }: { locale: Locale }) {
     logo: `${SITE_URL}/logo.png`,
     hasMap: GOOGLE_MAPS_URL,
     areaServed: SCHEMA_AREAS.map((name) => ({
-      "@type": "City",
+      "@type": "AdministrativeArea",
       name,
     })),
+    serviceType: [...SCHEMA_SERVICE_TYPES],
     makesOffer: SCHEMA_OFFERS.map((name) => ({
       "@type": "Offer",
       itemOffered: {
         "@type": "Service",
         name,
-        areaServed: SCHEMA_AREAS.map((city) => ({
-          "@type": "City",
-          name: city,
-        })),
       },
     })),
     address: {
@@ -50,6 +46,16 @@ export function JsonLd({ locale }: { locale: Locale }) {
     sameAs: [SOCIAL.tiktok, SOCIAL.facebook, SOCIAL.instagram, GOOGLE_MAPS_URL],
   };
 
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(business) }}
+    />
+  );
+}
+
+export function FaqJsonLd({ locale }: { locale: Locale }) {
+  const t = getDictionary(locale);
   const faq = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
@@ -64,15 +70,9 @@ export function JsonLd({ locale }: { locale: Locale }) {
   };
 
   return (
-    <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(business) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faq) }}
-      />
-    </>
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(faq) }}
+    />
   );
 }

@@ -53,7 +53,7 @@ export function Footer() {
     <footer className="border-t border-white/10 bg-[#070a10]">
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:px-6 lg:grid-cols-4">
         <div className="lg:col-span-2">
-          <a href="#top" className="inline-flex h-16 items-center">
+          <a href="/" className="inline-flex h-16 items-center">
             <BrandLogo />
           </a>
           <p className="mt-3 max-w-md text-sm text-slate-400">{t.footer.blurb}</p>
@@ -92,7 +92,11 @@ export function Footer() {
           <p className="text-sm font-semibold uppercase tracking-wider text-gold">
             {t.footer.contact}
           </p>
-          <a href={PHONE_TEL} className="mt-3 flex items-center gap-2 text-cyan">
+          <a
+            href={PHONE_TEL}
+            data-track="phone-call"
+            className="mt-3 flex items-center gap-2 text-cyan"
+          >
             <Phone className="h-4 w-4" />
             {PHONE_DISPLAY}
           </a>
@@ -147,8 +151,16 @@ export function Footer() {
             </span>
           ))}
         </div>
-        <p className="px-4 pb-8 text-center text-xs text-slate-500">
-          © {new Date().getFullYear()} {COMPANY}. {t.footer.legal}
+        <p className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 px-4 pb-8 text-center text-xs text-slate-500">
+          <span>
+            © {new Date().getFullYear()} {COMPANY}. {t.footer.legal}
+          </span>
+          <a href="/privacy" className="text-slate-400 hover:text-cyan">
+            {t.footer.privacy}
+          </a>
+          <a href="/terms" className="text-slate-400 hover:text-cyan">
+            {t.footer.terms}
+          </a>
         </p>
       </div>
     </footer>

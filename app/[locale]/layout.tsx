@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { JsonLd } from "@/components/json-ld";
+import { FaqJsonLd } from "@/components/json-ld";
 import { LocaleProvider } from "@/components/locale-provider";
 import { SiteShell } from "@/components/site-shell";
 import { getDictionary, isLocale } from "@/lib/i18n";
@@ -76,7 +76,7 @@ export default async function LocaleLayout({
 
   return (
     <LocaleProvider locale={locale} dictionary={dictionary}>
-      <JsonLd locale={locale} />
+      <FaqJsonLd locale={locale as Locale} />
       <SiteShell>{children}</SiteShell>
     </LocaleProvider>
   );

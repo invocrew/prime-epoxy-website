@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { Cormorant_Garamond, Outfit } from "next/font/google";
+import { Analytics } from "@/components/analytics";
+import { BusinessJsonLd } from "@/components/json-ld";
 import { SEO_KEYWORDS, SITE_URL } from "@/lib/site";
 import "./globals.css";
 
@@ -86,7 +88,11 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
       lang={lang}
       className={`${outfit.variable} ${cormorant.variable} h-full antialiased`}
     >
-      <body className="min-h-full bg-deep text-foreground">{children}</body>
+      <body className="min-h-full bg-deep text-foreground">
+        <Analytics />
+        <BusinessJsonLd />
+        {children}
+      </body>
     </html>
   );
 }
