@@ -20,10 +20,15 @@ export function Hero() {
 
   return (
     <section id="top" className="relative overflow-hidden">
-      <div className="pointer-events-none absolute inset-0">
-        <div className="absolute -left-24 top-10 h-80 w-80 rounded-full bg-cyan/20 blur-3xl" />
-        <div className="absolute right-0 top-32 h-96 w-96 rounded-full bg-gold/10 blur-3xl" />
-      </div>
+      <div
+        className="pointer-events-none absolute inset-0 bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: "url('/hero-metallic-bg.jpg')" }}
+        aria-hidden="true"
+      />
+      <div
+        className="pointer-events-none absolute inset-0 bg-gradient-to-r from-black/85 via-black/70 to-black/40"
+        aria-hidden="true"
+      />
 
       <div className="relative mx-auto grid max-w-7xl gap-12 px-4 py-16 sm:px-6 lg:grid-cols-[1.15fr_0.85fr] lg:py-24">
         <div>
