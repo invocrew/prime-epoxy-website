@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Camera, Lock, Ruler, Unlock, X } from "lucide-react";
 import {
   CONTRACTOR_AUTH_KEY,
@@ -8,6 +8,7 @@ import {
   CURES,
   DIAMOND_TOOLING,
   FLAKE_BLENDS,
+  GARAGE_FOOTPRINTS,
   MOHS,
   MVB_RATE,
   PREP,
@@ -39,6 +40,20 @@ import {
 
 const fieldClass =
   "w-full rounded-2xl border border-[#262c3e] bg-[#181c26] px-5 py-4 text-2xl font-bold text-white outline-none focus:border-[#00f0ff] focus:shadow-[0_0_0_3px_rgba(0,240,255,0.25)]";
+
+function nativeMeasureHref() {
+  if (typeof navigator === "undefined") {
+    return "apple-measure://";
+  }
+  const ua = navigator.userAgent || "";
+  if (/iPhone|iPad|iPod/i.test(ua)) {
+    return "apple-measure://";
+  }
+  if (/Android/i.test(ua)) {
+    return "intent:#Intent;action=android.media.action.STILL_IMAGE_CAMERA;end";
+  }
+  return "apple-measure://";
+}
 
 async function copyText(text: string) {
   try {
@@ -104,6 +119,11 @@ export default function ContractorPortalPage() {
   const [lengthFt, setLengthFt] = useState(20);
   const [widthFt, setWidthFt] = useState(20);
   const [measureOpen, setMeasureOpen] = useState(false);
+  const [cameraOn, setCameraOn] = useState(false);
+  const [cameraError, setCameraError] = useState("");
+  const cameraRef = useRef<HTMLVideoElement>(null);
+  const streamRef = useRef<MediaStream | null>(null);
+  const scanInputRef = useRef<HTMLInputElement>(null);
   const [cure, setCure] = useState<CureId>("standard");
   const [area, setArea] = useState(400);
   const [system, setSystem] = useState<SystemId>("flake");
@@ -136,6 +156,27 @@ export default function ContractorPortalPage() {
     setAuthed(sessionStorage.getItem(CONTRACTOR_AUTH_KEY) === "true");
     setReady(true);
   }, []);
+
+  useEffect(() => {
+    if (cameraOn && cameraRef.current && streamRef.current) {
+      cameraRef.current.srcObject = streamRef.current;
+      void cameraRef.current.play().catch(() => {
+        setCameraError("Camera preview could not start. Use the photo scanner instead.");
+      });
+    }
+  }, [cameraOn]);
+
+  useEffect(() => {
+    if (!measureOpen) {
+      stopCamera();
+    }
+  }, [measureOpen]);
+
+  function stopCamera() {
+    streamRef.current?.getTracks().forEach((track) => track.stop());
+    streamRef.current = null;
+    setCameraOn(false);
+  }
 
   const input: PortalInputs = {
     unit,
@@ -233,6 +274,39 @@ export default function ContractorPortalPage() {
     setLengthFt(safeLength);
     setWidthFt(safeWidth);
     setArea(toDisplayArea(safeLength * safeWidth, unit));
+  }
+
+  function applyFootprint(length: number, width: number) {
+    setAreaMode("dimensions");
+    applyDimensions(length, width);
+    setMeasureOpen(false);
+    flash(`Loaded ${length}' × ${width}' (${length * width} sq ft)`);
+  }
+
+  async function startBrowserCamera() {
+    setCameraError("");
+    if (!navigator.mediaDevices?.getUserMedia) {
+      setCameraError("This browser cannot open a live camera. Use the photo scanner instead.");
+      scanInputRef.current?.click();
+      return;
+    }
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: { ideal: "environment" } },
+        audio: false,
+      });
+      streamRef.current = stream;
+      setCameraOn(true);
+    } catch {
+      setCameraError(
+        "Camera permission was denied. Enable camera access, or use the photo scanner / native Measure app.",
+      );
+      scanInputRef.current?.click();
+    }
+  }
+
+  function launchNativeMeasure() {
+    window.location.href = nativeMeasureHref();
   }
 
   function applyPreset(sqft: number) {
@@ -1121,8 +1195,8 @@ export default function ContractorPortalPage() {
       ) : null}
 
       {measureOpen ? (
-        <div className="fixed inset-0 z-[220] grid place-items-center bg-black/70 px-4">
-          <div className="w-full max-w-lg rounded-3xl border border-[#262c3e] bg-[#14171f] p-6 shadow-2xl">
+        <div className="fixed inset-0 z-[220] grid place-items-end bg-black/75 p-0 sm:place-items-center sm:px-4">
+          <div className="max-h-[92vh] w-full overflow-y-auto rounded-t-3xl border border-[#262c3e] bg-[#14171f] p-5 shadow-2xl sm:max-w-lg sm:rounded-3xl sm:p-6">
             <div className="flex items-start justify-between gap-4">
               <div>
                 <p className="text-sm font-black uppercase tracking-[0.16em] text-[#00f0ff]">
@@ -1134,35 +1208,102 @@ export default function ContractorPortalPage() {
               </div>
               <button
                 type="button"
-                onClick={() => setMeasureOpen(false)}
-                className="rounded-xl border border-[#262c3e] p-2"
+                onClick={() => {
+                  stopCamera();
+                  setMeasureOpen(false);
+                }}
+                className="grid h-12 w-12 place-items-center rounded-xl border border-[#262c3e]"
                 aria-label="Close measure helper"
               >
                 <X className="h-5 w-5" />
               </button>
             </div>
-            <ol className="mt-5 space-y-3 text-base font-bold text-slate-200">
-              <li>1. Open your phone Measure app and walk the garage length, then width.</li>
-              <li>2. Enter those feet values in Dimensions (L × W) — area calculates instantly.</li>
-              <li>3. Confirm corners, stairs, and storage bump-outs before locking the quote.</li>
-            </ol>
-            <div className="mt-6 grid gap-3 sm:grid-cols-2">
-              <a
-                href="apple-measure://"
-                className="rounded-2xl bg-[#00f0ff] px-4 py-3 text-center text-lg font-black text-[#0b0d11]"
-              >
-                Open Apple Measure
-              </a>
+
+            <div className="mt-5 space-y-3">
+              <p className="text-xs font-black uppercase tracking-[0.16em] text-slate-400">
+                Option A · Native phone app
+              </p>
               <button
                 type="button"
-                onClick={() => {
-                  switchAreaMode("dimensions");
-                  setMeasureOpen(false);
-                }}
-                className="rounded-2xl border border-[#262c3e] px-4 py-3 text-lg font-black"
+                onClick={launchNativeMeasure}
+                className="flex min-h-14 w-full items-center justify-center rounded-2xl bg-[#00f0ff] px-4 py-4 text-lg font-black text-[#0b0d11]"
               >
-                Enter L × W here
+                Launch Native Phone Measure App
               </button>
+              <p className="text-sm font-bold text-slate-400">
+                iPhone opens Measure. Pixel / Android opens the rear camera so you can capture
+                wall-to-wall dimensions.
+              </p>
+            </div>
+
+            <div className="mt-6 space-y-3">
+              <p className="text-xs font-black uppercase tracking-[0.16em] text-slate-400">
+                Option B · In-browser camera scanner
+              </p>
+              <div className="grid gap-3 sm:grid-cols-2">
+                <button
+                  type="button"
+                  onClick={() => void startBrowserCamera()}
+                  className="flex min-h-14 items-center justify-center gap-2 rounded-2xl border border-[#00f0ff]/40 bg-[#00f0ff]/10 px-4 py-4 text-lg font-black text-[#00f0ff]"
+                >
+                  <Camera className="h-5 w-5" />
+                  Live Camera
+                </button>
+                <button
+                  type="button"
+                  onClick={() => scanInputRef.current?.click()}
+                  className="flex min-h-14 items-center justify-center rounded-2xl border border-[#262c3e] px-4 py-4 text-lg font-black"
+                >
+                  Photo Scanner
+                </button>
+              </div>
+              <input
+                ref={scanInputRef}
+                type="file"
+                accept="image/*"
+                capture="environment"
+                className="sr-only"
+                onChange={() => {
+                  setAreaMode("dimensions");
+                  flash("Photo captured. Enter length and width from the shot.");
+                }}
+              />
+              {cameraOn ? (
+                <video
+                  ref={cameraRef}
+                  className="mt-1 h-48 w-full rounded-2xl bg-black object-cover"
+                  autoPlay
+                  muted
+                  playsInline
+                />
+              ) : null}
+              {cameraError ? (
+                <p className="text-base font-bold text-amber-300">{cameraError}</p>
+              ) : null}
+            </div>
+
+            <div className="mt-6 space-y-3">
+              <p className="text-xs font-black uppercase tracking-[0.16em] text-slate-400">
+                Option C · Quick dimension helper
+              </p>
+              <div className="grid grid-cols-2 gap-2">
+                {GARAGE_FOOTPRINTS.map((print) => (
+                  <button
+                    key={print.id}
+                    type="button"
+                    onClick={() => applyFootprint(print.length, print.width)}
+                    className="min-h-20 rounded-2xl border border-[#262c3e] bg-[#181c26] px-3 py-3 text-left"
+                  >
+                    <span className="block text-base font-black text-white">{print.label}</span>
+                    <span className="block text-sm font-bold text-[#00f0ff]">
+                      {print.length}&apos; × {print.width}&apos;
+                    </span>
+                    <span className="block text-sm font-bold text-slate-400">
+                      {print.sqft} sq ft
+                    </span>
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         </div>

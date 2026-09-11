@@ -86,6 +86,13 @@ export const PRESETS = [
   { id: "large", label: "Large 2-Car", sqft: 500 },
 ] as const;
 
+export const GARAGE_FOOTPRINTS = [
+  { id: "1-car", label: "1-Car", length: 12, width: 20, sqft: 240 },
+  { id: "std-2-car", label: "Std 2-Car", length: 20, width: 20, sqft: 400 },
+  { id: "large-2-car", label: "Large 2-Car", length: 20, width: 24, sqft: 480 },
+  { id: "3-car", label: "3-Car", length: 30, width: 22, sqft: 660 },
+] as const;
+
 export const PREP: Record<PrepId, { name: string; fee: number; detail: string }> = {
   good: {
     name: "Good / Standard Prep",
