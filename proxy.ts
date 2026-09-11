@@ -12,10 +12,17 @@ export function proxy(request: NextRequest) {
 
   const locale = pathname === "/fr" || pathname.startsWith("/fr/") ? "fr" : "en";
   headers.set("x-locale", locale);
+  headers.set("x-pathname", pathname);
 
   if (pathname === "/") {
     const url = request.nextUrl.clone();
     url.pathname = "/en";
+    return NextResponse.rewrite(url, { request: { headers } });
+  }
+
+  if (pathname === "/portal" || pathname.startsWith("/portal/")) {
+    const url = request.nextUrl.clone();
+    url.pathname = `/en${pathname}`;
     return NextResponse.rewrite(url, { request: { headers } });
   }
 

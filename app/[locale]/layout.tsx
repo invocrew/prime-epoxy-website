@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import Script from "next/script";
 import { FaqJsonLd } from "@/components/json-ld";
@@ -74,6 +75,8 @@ export default async function LocaleLayout({
     notFound();
   }
   const dictionary = getDictionary(locale as Locale);
+  const pathname = (await headers()).get("x-pathname") ?? "";
+  const isPortal = pathname === "/portal" || pathname.endsWith("/portal");
 
   return (
     <LocaleProvider locale={locale} dictionary={dictionary}>
@@ -98,8 +101,8 @@ fbq('track', 'PageView');`}
           alt=""
         />
       </noscript>
-      <FaqJsonLd locale={locale as Locale} />
-      <SiteShell>{children}</SiteShell>
+      {isPortal ? null : <FaqJsonLd locale={locale as Locale} />}
+      {isPortal ? children : <SiteShell>{children}</SiteShell>}
     </LocaleProvider>
   );
 }
