@@ -87,11 +87,16 @@ export const PRESETS = [
 ] as const;
 
 export const GARAGE_FOOTPRINTS = [
-  { id: "1-car", label: "1-Car", length: 12, width: 20, sqft: 240 },
+  { id: "1-car", label: "Single Car", length: 12, width: 20, sqft: 240 },
   { id: "std-2-car", label: "Std 2-Car", length: 20, width: 20, sqft: 400 },
   { id: "large-2-car", label: "Large 2-Car", length: 20, width: 24, sqft: 480 },
-  { id: "3-car", label: "3-Car", length: 30, width: 22, sqft: 660 },
+  { id: "3-car", label: "3-Car Full", length: 30, width: 22, sqft: 660 },
 ] as const;
+
+export function roomArea(length: number, width: number) {
+  const sqFt = Math.max(0, Number.isFinite(length) ? length : 0) * Math.max(0, Number.isFinite(width) ? width : 0);
+  return { sqFt, sqM: sqFt / SQFT_PER_SQM };
+}
 
 export const PREP: Record<PrepId, { name: string; fee: number; detail: string }> = {
   good: {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { Camera, Lock, Ruler, Unlock, X } from "lucide-react";
 import {
   CONTRACTOR_AUTH_KEY,
@@ -21,6 +21,7 @@ import {
   calculatePortal,
   clientQuoteText,
   jobSheetText,
+  roomArea,
   supplierPoText,
   toDisplayArea,
   toSqFt,
@@ -41,18 +42,21 @@ import {
 const fieldClass =
   "w-full rounded-2xl border border-[#262c3e] bg-[#181c26] px-5 py-4 text-2xl font-bold text-white outline-none focus:border-[#00f0ff] focus:shadow-[0_0_0_3px_rgba(0,240,255,0.25)]";
 
-function nativeMeasureHref() {
-  if (typeof navigator === "undefined") {
-    return "apple-measure://";
-  }
-  const ua = navigator.userAgent || "";
+function launchNativeMeasureApp() {
+  const ua = typeof navigator === "undefined" ? "" : navigator.userAgent;
   if (/iPhone|iPad|iPod/i.test(ua)) {
-    return "apple-measure://";
+    window.location.href = "measure://";
+    window.setTimeout(() => {
+      window.location.href = "apple-measure://";
+    }, 700);
+    return;
   }
   if (/Android/i.test(ua)) {
-    return "intent:#Intent;action=android.media.action.STILL_IMAGE_CAMERA;end";
+    window.location.href =
+      "intent://arvr.google.com/measure/#Intent;scheme=https;package=com.google.ar.measure;S.browser_fallback_url=https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.google.ar.measure;end";
+    return;
   }
-  return "apple-measure://";
+  window.location.href = "measure://";
 }
 
 async function copyText(text: string) {
@@ -119,11 +123,8 @@ export default function ContractorPortalPage() {
   const [lengthFt, setLengthFt] = useState(20);
   const [widthFt, setWidthFt] = useState(20);
   const [measureOpen, setMeasureOpen] = useState(false);
-  const [cameraOn, setCameraOn] = useState(false);
-  const [cameraError, setCameraError] = useState("");
-  const cameraRef = useRef<HTMLVideoElement>(null);
-  const streamRef = useRef<MediaStream | null>(null);
-  const scanInputRef = useRef<HTMLInputElement>(null);
+  const [draftLength, setDraftLength] = useState(20);
+  const [draftWidth, setDraftWidth] = useState(20);
   const [cure, setCure] = useState<CureId>("standard");
   const [area, setArea] = useState(400);
   const [system, setSystem] = useState<SystemId>("flake");
@@ -158,25 +159,11 @@ export default function ContractorPortalPage() {
   }, []);
 
   useEffect(() => {
-    if (cameraOn && cameraRef.current && streamRef.current) {
-      cameraRef.current.srcObject = streamRef.current;
-      void cameraRef.current.play().catch(() => {
-        setCameraError("Camera preview could not start. Use the photo scanner instead.");
-      });
-    }
-  }, [cameraOn]);
-
-  useEffect(() => {
-    if (!measureOpen) {
-      stopCamera();
+    if (measureOpen) {
+      setDraftLength(lengthFt);
+      setDraftWidth(widthFt);
     }
   }, [measureOpen]);
-
-  function stopCamera() {
-    streamRef.current?.getTracks().forEach((track) => track.stop());
-    streamRef.current = null;
-    setCameraOn(false);
-  }
 
   const input: PortalInputs = {
     unit,
@@ -276,37 +263,20 @@ export default function ContractorPortalPage() {
     setArea(toDisplayArea(safeLength * safeWidth, unit));
   }
 
+  function applyDraftToEstimate() {
+    setAreaMode("dimensions");
+    applyDimensions(draftLength, draftWidth);
+    setMeasureOpen(false);
+    const live = roomArea(draftLength, draftWidth);
+    flash(`Applied ${Math.round(live.sqFt)} sq ft to estimate`);
+  }
+
   function applyFootprint(length: number, width: number) {
+    setDraftLength(length);
+    setDraftWidth(width);
     setAreaMode("dimensions");
     applyDimensions(length, width);
-    setMeasureOpen(false);
     flash(`Loaded ${length}' × ${width}' (${length * width} sq ft)`);
-  }
-
-  async function startBrowserCamera() {
-    setCameraError("");
-    if (!navigator.mediaDevices?.getUserMedia) {
-      setCameraError("This browser cannot open a live camera. Use the photo scanner instead.");
-      scanInputRef.current?.click();
-      return;
-    }
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: { ideal: "environment" } },
-        audio: false,
-      });
-      streamRef.current = stream;
-      setCameraOn(true);
-    } catch {
-      setCameraError(
-        "Camera permission was denied. Enable camera access, or use the photo scanner / native Measure app.",
-      );
-      scanInputRef.current?.click();
-    }
-  }
-
-  function launchNativeMeasure() {
-    window.location.href = nativeMeasureHref();
   }
 
   function applyPreset(sqft: number) {
@@ -1200,18 +1170,15 @@ export default function ContractorPortalPage() {
             <div className="flex items-start justify-between gap-4">
               <div>
                 <p className="text-sm font-black uppercase tracking-[0.16em] text-[#00f0ff]">
-                  Field Measure
+                  Contractor Measure
                 </p>
                 <h2 className="mt-1 text-2xl font-black text-white">
-                  Quick AR / Camera Measure
+                  Quick Room Dimensions
                 </h2>
               </div>
               <button
                 type="button"
-                onClick={() => {
-                  stopCamera();
-                  setMeasureOpen(false);
-                }}
+                onClick={() => setMeasureOpen(false)}
                 className="grid h-12 w-12 place-items-center rounded-xl border border-[#262c3e]"
                 aria-label="Close measure helper"
               >
@@ -1221,70 +1188,77 @@ export default function ContractorPortalPage() {
 
             <div className="mt-5 space-y-3">
               <p className="text-xs font-black uppercase tracking-[0.16em] text-slate-400">
-                Option A · Native phone app
+                Launch Phone Measure App
               </p>
               <button
                 type="button"
-                onClick={launchNativeMeasure}
+                onClick={launchNativeMeasureApp}
                 className="flex min-h-14 w-full items-center justify-center rounded-2xl bg-[#00f0ff] px-4 py-4 text-lg font-black text-[#0b0d11]"
               >
-                Launch Native Phone Measure App
+                Open Device Measure Tool
               </button>
               <p className="text-sm font-bold text-slate-400">
-                iPhone opens Measure. Pixel / Android opens the rear camera so you can capture
-                wall-to-wall dimensions.
+                iPhone opens Measure. Pixel / Android opens Google Quick Measure when installed.
+                Browsers cannot read LiDAR — type the numbers back here after you walk the slab.
               </p>
             </div>
 
             <div className="mt-6 space-y-3">
               <p className="text-xs font-black uppercase tracking-[0.16em] text-slate-400">
-                Option B · In-browser camera scanner
+                Length × Width calculator
               </p>
               <div className="grid gap-3 sm:grid-cols-2">
-                <button
-                  type="button"
-                  onClick={() => void startBrowserCamera()}
-                  className="flex min-h-14 items-center justify-center gap-2 rounded-2xl border border-[#00f0ff]/40 bg-[#00f0ff]/10 px-4 py-4 text-lg font-black text-[#00f0ff]"
-                >
-                  <Camera className="h-5 w-5" />
-                  Live Camera
-                </button>
-                <button
-                  type="button"
-                  onClick={() => scanInputRef.current?.click()}
-                  className="flex min-h-14 items-center justify-center rounded-2xl border border-[#262c3e] px-4 py-4 text-lg font-black"
-                >
-                  Photo Scanner
-                </button>
+                <label className="block">
+                  <span className="mb-2 flex items-center gap-2 text-base font-black">
+                    <Ruler className="h-4 w-4 text-[#00f0ff]" />
+                    Length (ft)
+                  </span>
+                  <input
+                    type="number"
+                    min={0}
+                    step={0.1}
+                    inputMode="decimal"
+                    value={draftLength}
+                    onChange={(event) => setDraftLength(Number(event.target.value) || 0)}
+                    className={fieldClass}
+                  />
+                </label>
+                <label className="block">
+                  <span className="mb-2 flex items-center gap-2 text-base font-black">
+                    <Ruler className="h-4 w-4 text-[#00f0ff]" />
+                    Width (ft)
+                  </span>
+                  <input
+                    type="number"
+                    min={0}
+                    step={0.1}
+                    inputMode="decimal"
+                    value={draftWidth}
+                    onChange={(event) => setDraftWidth(Number(event.target.value) || 0)}
+                    className={fieldClass}
+                  />
+                </label>
               </div>
-              <input
-                ref={scanInputRef}
-                type="file"
-                accept="image/*"
-                capture="environment"
-                className="sr-only"
-                onChange={() => {
-                  setAreaMode("dimensions");
-                  flash("Photo captured. Enter length and width from the shot.");
-                }}
-              />
-              {cameraOn ? (
-                <video
-                  ref={cameraRef}
-                  className="mt-1 h-48 w-full rounded-2xl bg-black object-cover"
-                  autoPlay
-                  muted
-                  playsInline
-                />
-              ) : null}
-              {cameraError ? (
-                <p className="text-base font-bold text-amber-300">{cameraError}</p>
-              ) : null}
+              <div className="rounded-2xl border border-[#00f0ff]/30 bg-[#00f0ff]/10 px-4 py-4">
+                <p className="text-2xl font-black text-white">
+                  {draftLength}′ × {draftWidth}′ = {Math.round(roomArea(draftLength, draftWidth).sqFt)} sq ft
+                </p>
+                <p className="mt-1 text-lg font-bold text-[#00f0ff]">
+                  ≈ {roomArea(draftLength, draftWidth).sqM.toFixed(1)} m²
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={applyDraftToEstimate}
+                className="flex min-h-14 w-full items-center justify-center rounded-2xl bg-[#007aff] px-4 py-4 text-lg font-black text-white"
+              >
+                Apply Dimensions to Estimate
+              </button>
             </div>
 
             <div className="mt-6 space-y-3">
               <p className="text-xs font-black uppercase tracking-[0.16em] text-slate-400">
-                Option C · Quick dimension helper
+                One-tap garage presets
               </p>
               <div className="grid grid-cols-2 gap-2">
                 {GARAGE_FOOTPRINTS.map((print) => (
